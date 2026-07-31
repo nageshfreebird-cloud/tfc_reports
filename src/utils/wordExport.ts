@@ -8,6 +8,14 @@ export const generateWordReport = async (
   config: ReportConfig,
   chartImages: { grade3: string; grade4: string; grade5: string }
 ) => {
+  let logoBuffer: ArrayBuffer | null = null;
+  try {
+    const response = await fetch('/pdf-logo.png');
+    logoBuffer = await response.arrayBuffer();
+  } catch (e) {
+    console.warn("Could not fetch logo for Word export");
+  }
+
   // Helpers
   const getSchoolTitle = () => {
     const fullSchoolName = expandSchoolName(school.School_Name);
@@ -174,6 +182,19 @@ export const generateWordReport = async (
         }
       },
       children: [
+        ...(logoBuffer ? [
+          new Paragraph({
+            alignment: AlignmentType.RIGHT,
+            children: [
+              new ImageRun({
+                data: logoBuffer,
+                transformation: { width: 60, height: 60 },
+                type: 'png'
+              } as any)
+            ],
+            spacing: { after: 200 }
+          })
+        ] : []),
         new Paragraph({
           alignment: AlignmentType.CENTER,
           children: [

@@ -10,11 +10,11 @@ import Logo from './components/Logo';
 
 const DEFAULT_CONFIG: ReportConfig = {
   parameters: {
-    KNOW: { label: 'Phonics', max: 10 },
-    READ: { label: 'Phonological\nAwareness', max: 8 },
-    SPELL: { label: 'Vocabulary', max: 8 },
-    CWR: { label: 'Story Reading', max: 12 },
-    CWS: { label: 'Make\nsentences', max: 12 }
+    KNOW: { label: 'KNOW', max: 10 },
+    READ: { label: 'READ', max: 8 },
+    SPELL: { label: 'SPELL', max: 8 },
+    CWR: { label: 'CAMERA WORD\nREAD', max: 12 },
+    CWS: { label: 'CAMERA WORD\nSPELL', max: 12 }
   },
   phases: {
     Baseline: {

@@ -167,7 +167,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
 
     const renderCustomBarLabel = (props: any) => {
       const { x, y, width, height, value } = props;
-      if (value === undefined || value === null || height < 10) return null;
+      if (value === undefined || value === null) return null;
       return (
         <text x={x + width / 2} y={y + Math.max(height / 2, 6)} fill="#FFFFFF" textAnchor="middle" dominantBaseline="middle" fontSize={8} fontWeight="bold">
           {Number(value).toFixed(2)}
