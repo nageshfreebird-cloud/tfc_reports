@@ -74,7 +74,7 @@ export const generateWordReport = async (
               width: 320,
               height: 195,
             },
-          }),
+          } as any),
         ],
       }));
     } else {
