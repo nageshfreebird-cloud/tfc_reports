@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { read, utils } from 'xlsx';
 import { SchoolData, TestPhase, ReportConfig } from './types';
 import SchoolReportPDF from './components/SchoolReportPDF';
+import ManualEntryForm from './components/ManualEntryForm';
 import html2canvas from 'html2canvas';
 import { generateWordReport } from './utils/wordExport';
 import { FileText, Download, Upload, Settings } from 'lucide-react';
@@ -51,6 +52,7 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [sheetUrl, setSheetUrl] = useState('');
   const [isLoadingSheet, setIsLoadingSheet] = useState(false);
+  const [isManualMode, setIsManualMode] = useState(false);
 
   // Core parsing logic separated so it can be used by both file and URL
   const parseWorkbook = (workbook: any) => {
@@ -257,11 +259,29 @@ export default function App() {
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         
-        {/* Step 1: Upload */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <h2 className="text-xl font-bold mb-4 flex items-center"><Upload className="w-5 h-5 mr-2 text-indigo-600"/> Step 1: Import Data</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {isManualMode ? (
+          <ManualEntryForm 
+            config={config} 
+            onSubmit={(data, phase) => {
+              setSchools([data]);
+              setReportSchool(data.School_Name);
+              setReportPhase(phase);
+              setIsManualMode(false);
+            }} 
+            onCancel={() => setIsManualMode(false)} 
+          />
+        ) : (
+          <>
+            {/* Step 1: Upload */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold flex items-center"><Upload className="w-5 h-5 mr-2 text-indigo-600"/> Step 1: Import Data</h2>
+                <button onClick={() => setIsManualMode(true)} className="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 font-bold py-2 px-4 rounded-lg text-sm transition-colors">
+                  Manual Entry Mode
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col justify-center border-2 border-dashed border-slate-300 rounded-xl p-6 bg-slate-50 hover:bg-slate-100 transition-colors h-full">
               <h3 className="font-bold text-slate-700 mb-2 text-sm text-center">Upload File</h3>
               <input
@@ -507,6 +527,8 @@ export default function App() {
               </div>
             </div>
           </div>
+        )}
+          </>
         )}
       </main>
     </div>

@@ -53,13 +53,36 @@ export const generateWordReport = async (
   const grade5Buffer = base64ToArrayBuffer(chartImages.grade5);
 
   // Chart rendering helper
-  const createChartCell = (title: string, buffer: ArrayBuffer | null, figText: string, headerColor: string) => {
+  const shortName = school.School_Name.replace(/\s+/g, '_').toUpperCase();
+
+  const createHeaderCell = (title: string, color: string) => {
+    return new TableCell({
+      shading: { fill: color },
+      children: [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [new TextRun({ text: title, bold: true, size: 28 })],
+          spacing: { before: 80, after: 80 }
+        })
+      ],
+      borders: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
+        bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
+        left: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
+        right: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
+      }
+    });
+  };
+
+  const createChartCell = (grade: number, buffer: ArrayBuffer | null, figText: string) => {
     const cellContents = [];
+    const gradeString = grade === 3 ? "3rd" : grade === 4 ? "4th" : "5th";
+    const title = `${shortName}_${gradeString} Class ${phase} Test_Result`;
     
     // Header
     cellContents.push(new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: title, bold: true, size: 28 })], // 14pt
+      children: [new TextRun({ text: title, bold: true, italics: true, size: 20 })], // 10pt
       spacing: { before: 100, after: 100 }
     }));
 
@@ -105,11 +128,6 @@ export const generateWordReport = async (
 
   const getNextStepsCell = () => {
     const contents = [];
-    contents.push(new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: config.phases[phase].nextStepsTitle, bold: true, size: 28 })],
-      spacing: { before: 100, after: 200 }
-    }));
 
     if (phase === 'Baseline') {
       for (let i = 0; i < 4; i++) {
@@ -219,8 +237,14 @@ export const generateWordReport = async (
           rows: [
             new TableRow({
               children: [
-                createChartCell("Grade 3", grade3Buffer, getFigText(3), "A9D18E"),
-                createChartCell("Grade 4", grade4Buffer, getFigText(4), "A9D18E")
+                createHeaderCell("Grade 3", "A9D18E"),
+                createHeaderCell("Grade 4", "A9D18E")
+              ]
+            }),
+            new TableRow({
+              children: [
+                createChartCell(3, grade3Buffer, getFigText(3)),
+                createChartCell(4, grade4Buffer, getFigText(4))
               ]
             })
           ]
@@ -235,7 +259,13 @@ export const generateWordReport = async (
           rows: [
             new TableRow({
               children: [
-                createChartCell("Grade 5", grade5Buffer, getFigText(5), "A9D18E"),
+                createHeaderCell("Grade 5", "A9D18E"),
+                createHeaderCell(config.phases[phase].nextStepsTitle, "FFD966")
+              ]
+            }),
+            new TableRow({
+              children: [
+                createChartCell(5, grade5Buffer, getFigText(5)),
                 getNextStepsCell()
               ]
             })

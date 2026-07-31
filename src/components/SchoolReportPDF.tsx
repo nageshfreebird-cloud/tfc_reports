@@ -165,6 +165,16 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
     // Determine max Y-axis domain based on max mark config
     const maxMark = Math.max(...Object.values(config.parameters).map(p => p.max));
 
+    const renderCustomBarLabel = (props: any) => {
+      const { x, y, width, height, value } = props;
+      if (value === undefined || value === null || height < 10) return null;
+      return (
+        <text x={x + width / 2} y={y + Math.max(height / 2, 6)} fill="#FFFFFF" textAnchor="middle" dominantBaseline="middle" fontSize={8} fontWeight="bold">
+          {Number(value).toFixed(2)}
+        </text>
+      );
+    };
+
     return (
       <div className="flex flex-col items-center pt-1 pb-2">
         <h4 className="text-sm font-bold italic mb-2">{title}</h4>
@@ -182,17 +192,17 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
                 <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
-                  <LabelList dataKey="Baseline" position="insideTop" fill="#FFFFFF" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
+                  <LabelList dataKey="Baseline" content={renderCustomBarLabel} />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
                 <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
-                  <LabelList dataKey="Midline" position="insideTop" fill="#FFFFFF" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
+                  <LabelList dataKey="Midline" content={renderCustomBarLabel} />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
                 <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
-                  <LabelList dataKey="Endline" position="insideTop" fill="#FFFFFF" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
+                  <LabelList dataKey="Endline" content={renderCustomBarLabel} />
                 </Bar>
               )}
             </BarChart>
