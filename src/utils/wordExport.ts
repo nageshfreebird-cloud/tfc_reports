@@ -74,6 +74,7 @@ export const generateWordReport = async (
               width: 320,
               height: 195,
             },
+            type: 'png'
           } as any),
         ],
       }));

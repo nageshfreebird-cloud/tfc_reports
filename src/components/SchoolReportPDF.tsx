@@ -153,7 +153,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
     );
   };
 
-  const renderBarChart = (stats: any) => {
+  const renderBarChart = (stats: any, title: string) => {
     if (stats.assessedCount === 0) {
       return (
         <div className="flex flex-col items-center justify-center h-48 bg-slate-50 border border-slate-200 mt-4 mx-4">
@@ -167,6 +167,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
 
     return (
       <div className="flex flex-col items-center pt-1 pb-2">
+        <h4 className="text-sm font-bold italic mb-2">{title}</h4>
         <div className="w-[90mm] h-[55mm] relative mx-auto px-2 mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -181,17 +182,17 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
                 <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
-                  <LabelList dataKey="Baseline" position="top" fill="#4285F4" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
+                  <LabelList dataKey="Baseline" position="insideTop" fill="#FFFFFF" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
                 <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
-                  <LabelList dataKey="Midline" position="top" fill="#EA4335" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
+                  <LabelList dataKey="Midline" position="insideTop" fill="#FFFFFF" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
                 <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
-                  <LabelList dataKey="Endline" position="top" fill="#34A853" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
+                  <LabelList dataKey="Endline" position="insideTop" fill="#FFFFFF" fontSize={8} formatter={(v: number) => v.toFixed(2)} />
                 </Bar>
               )}
             </BarChart>
@@ -257,7 +258,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
             <h3 className="font-bold text-lg">Grade 3</h3>
           </div>
           <div id="chart-grade-3">
-            {phase === 'Baseline' ? renderPieChart(grade3, `${shortName}_3rd Class ${phase} Test_Result`) : renderBarChart(grade3)}
+            {phase === 'Baseline' ? renderPieChart(grade3, `${shortName}_3rd Class ${phase} Test_Result`) : renderBarChart(grade3, `${shortName}_3rd Class ${phase} Test_Result`)}
           </div>
           <div className="px-4 text-center pb-4 text-[13px] italic">
             {phase === 'Endline' ? (
@@ -277,7 +278,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
             <h3 className="font-bold text-lg">Grade 4</h3>
           </div>
           <div id="chart-grade-4">
-            {phase === 'Baseline' ? renderPieChart(grade4, `${shortName}_4th Class ${phase} Test_Result`) : renderBarChart(grade4)}
+            {phase === 'Baseline' ? renderPieChart(grade4, `${shortName}_4th Class ${phase} Test_Result`) : renderBarChart(grade4, `${shortName}_4th Class ${phase} Test_Result`)}
           </div>
           <div className="px-4 text-center pb-4 text-[13px] italic">
             {phase === 'Endline' ? (
@@ -300,7 +301,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
             <h3 className="font-bold text-lg">Grade 5</h3>
           </div>
           <div id="chart-grade-5">
-            {phase === 'Baseline' ? renderPieChart(grade5, `${shortName}_5th Class ${phase} Test_Result`) : renderBarChart(grade5)}
+            {phase === 'Baseline' ? renderPieChart(grade5, `${shortName}_5th Class ${phase} Test_Result`) : renderBarChart(grade5, `${shortName}_5th Class ${phase} Test_Result`)}
           </div>
           <div className="px-4 text-center pb-2 text-[12px] italic">
             {phase === 'Endline' ? (
