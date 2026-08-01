@@ -165,16 +165,6 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
     // Determine max Y-axis domain based on max mark config
     const maxMark = Math.max(...Object.values(config.parameters).map(p => p.max));
 
-    const SimpleBarLabel = (props: any) => {
-      const { x, y, width, value } = props;
-      if (value === undefined || value === null) return null;
-      return (
-        <text x={x + width / 2} y={y + 12} fill="#FFFFFF" textAnchor="middle" fontSize={10} fontWeight="bold">
-          {Number(value).toFixed(1)}
-        </text>
-      );
-    };
-
     return (
       <div className="flex flex-col items-center pt-1 pb-2">
         <h4 className="text-sm font-bold italic mb-2">{title}</h4>
@@ -192,17 +182,35 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
                 <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
-                  <LabelList dataKey="Baseline" content={<SimpleBarLabel />} />
+                  <LabelList 
+                    dataKey="Baseline" 
+                    position="top" 
+                    fill="#000000" 
+                    style={{ fontSize: '9px', fontWeight: 'bold' }}
+                    formatter={(val: any) => Number(val).toFixed(1)}
+                  />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
                 <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
-                  <LabelList dataKey="Midline" content={<SimpleBarLabel />} />
+                  <LabelList 
+                    dataKey="Midline" 
+                    position="top" 
+                    fill="#000000" 
+                    style={{ fontSize: '9px', fontWeight: 'bold' }}
+                    formatter={(val: any) => Number(val).toFixed(1)}
+                  />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
                 <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
-                  <LabelList dataKey="Endline" content={<SimpleBarLabel />} />
+                  <LabelList 
+                    dataKey="Endline" 
+                    position="top" 
+                    fill="#000000" 
+                    style={{ fontSize: '9px', fontWeight: 'bold' }}
+                    formatter={(val: any) => Number(val).toFixed(1)}
+                  />
                 </Bar>
               )}
             </BarChart>
