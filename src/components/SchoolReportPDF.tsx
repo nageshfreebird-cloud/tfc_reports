@@ -165,41 +165,6 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
     // Determine max Y-axis domain based on max mark config
     const maxMark = Math.max(...Object.values(config.parameters).map(p => p.max));
 
-    const renderCustomBarLabel = (props: any) => {
-      const { x, y, width, height, value } = props;
-      if (value === undefined || value === null) return null;
-      
-      const textX = x + width / 2;
-      const textY = y + Math.max(height / 2, 6);
-      
-      const boxWidth = 16;
-      const boxHeight = 10;
-      
-      return (
-        <g>
-          <rect 
-            x={textX - boxWidth / 2} 
-            y={textY - boxHeight / 2} 
-            width={boxWidth} 
-            height={boxHeight} 
-            fill="rgba(0, 0, 0, 0.65)" 
-            rx={2} 
-            ry={2} 
-          />
-          <text 
-            x={textX} 
-            y={textY + 0.5} 
-            fill="#FFFFFF" 
-            textAnchor="middle" 
-            dominantBaseline="central" 
-            fontSize={7} 
-            fontWeight="bold"
-          >
-            {Number(value).toFixed(1)}
-          </text>
-        </g>
-      );
-    };
     return (
       <div className="flex flex-col items-center pt-1 pb-2">
         <h4 className="text-sm font-bold italic mb-2">{title}</h4>
@@ -217,17 +182,35 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
                 <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
-                  <LabelList dataKey="Baseline" content={renderCustomBarLabel} />
+                  <LabelList 
+                    dataKey="Baseline" 
+                    position="insideTop" 
+                    fill="#FFFFFF" 
+                    style={{ fontSize: '10px', fontWeight: 'bold' }}
+                    formatter={(val: any) => Number(val).toFixed(1)}
+                  />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
                 <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
-                  <LabelList dataKey="Midline" content={renderCustomBarLabel} />
+                  <LabelList 
+                    dataKey="Midline" 
+                    position="insideTop" 
+                    fill="#FFFFFF" 
+                    style={{ fontSize: '10px', fontWeight: 'bold' }}
+                    formatter={(val: any) => Number(val).toFixed(1)}
+                  />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
                 <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
-                  <LabelList dataKey="Endline" content={renderCustomBarLabel} />
+                  <LabelList 
+                    dataKey="Endline" 
+                    position="insideTop" 
+                    fill="#FFFFFF" 
+                    style={{ fontSize: '10px', fontWeight: 'bold' }}
+                    formatter={(val: any) => Number(val).toFixed(1)}
+                  />
                 </Bar>
               )}
             </BarChart>
