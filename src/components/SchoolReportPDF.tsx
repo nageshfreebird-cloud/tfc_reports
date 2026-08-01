@@ -168,10 +168,36 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
     const renderCustomBarLabel = (props: any) => {
       const { x, y, width, height, value } = props;
       if (value === undefined || value === null) return null;
+      
+      const textX = x + width / 2;
+      const textY = y + Math.max(height / 2, 6);
+      
+      const boxWidth = 16;
+      const boxHeight = 10;
+      
       return (
-        <text x={x + width / 2} y={y + Math.max(height / 2, 6)} fill="#FFFFFF" textAnchor="middle" dominantBaseline="middle" fontSize={8} fontWeight="bold">
-          {Number(value).toFixed(2)}
-        </text>
+        <g>
+          <rect 
+            x={textX - boxWidth / 2} 
+            y={textY - boxHeight / 2} 
+            width={boxWidth} 
+            height={boxHeight} 
+            fill="rgba(0, 0, 0, 0.65)" 
+            rx={2} 
+            ry={2} 
+          />
+          <text 
+            x={textX} 
+            y={textY + 0.5} 
+            fill="#FFFFFF" 
+            textAnchor="middle" 
+            dominantBaseline="central" 
+            fontSize={7} 
+            fontWeight="bold"
+          >
+            {Number(value).toFixed(1)}
+          </text>
+        </g>
       );
     };
     return (
@@ -191,47 +217,17 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
                 <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
-                  <LabelList 
-                    dataKey="Baseline" 
-                    position="center" 
-                    fill="#FFFFFF" 
-                    stroke="#000000"
-                    strokeWidth={0.5}
-                    style={{ paintOrder: 'stroke' }}
-                    fontSize={10} 
-                    fontWeight="bold"
-                    formatter={(val: number) => Number(val).toFixed(2)} 
-                  />
+                  <LabelList dataKey="Baseline" content={renderCustomBarLabel} />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
                 <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
-                  <LabelList 
-                    dataKey="Midline" 
-                    position="center" 
-                    fill="#FFFFFF" 
-                    stroke="#000000"
-                    strokeWidth={0.5}
-                    style={{ paintOrder: 'stroke' }}
-                    fontSize={10} 
-                    fontWeight="bold"
-                    formatter={(val: number) => Number(val).toFixed(2)} 
-                  />
+                  <LabelList dataKey="Midline" content={renderCustomBarLabel} />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
                 <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
-                  <LabelList 
-                    dataKey="Endline" 
-                    position="center" 
-                    fill="#FFFFFF" 
-                    stroke="#000000"
-                    strokeWidth={0.5}
-                    style={{ paintOrder: 'stroke' }}
-                    fontSize={10} 
-                    fontWeight="bold"
-                    formatter={(val: number) => Number(val).toFixed(2)} 
-                  />
+                  <LabelList dataKey="Endline" content={renderCustomBarLabel} />
                 </Bar>
               )}
             </BarChart>
