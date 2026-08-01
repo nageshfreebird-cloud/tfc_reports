@@ -57,8 +57,10 @@ export default function App() {
   // Core parsing logic separated so it can be used by both file and URL
   const parseWorkbook = (workbook: any) => {
     try {
-      const firstSheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheetName];
+      // Look for a sheet named "Reports", otherwise fallback to the first sheet
+      const targetSheetName = workbook.SheetNames.find((name: string) => name.toLowerCase() === 'reports');
+      const sheetName = targetSheetName || workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
       
       // Get rows as arrays
       const rows: any[][] = utils.sheet_to_json(worksheet, { header: 1 });
@@ -181,21 +183,22 @@ export default function App() {
       }
       
       const docId = match[1];
-      const csvUrl = `https://docs.google.com/spreadsheets/d/${docId}/export?format=csv`;
+      // Export as xlsx so we get all sheets, not just the first one
+      const xlsxUrl = `https://docs.google.com/spreadsheets/d/${docId}/export?format=xlsx`;
       
       // We use allorigins as a reliable free CORS proxy to avoid browser blocks
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrl)}`;
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(xlsxUrl)}`;
       
       const response = await fetch(proxyUrl);
       if (!response.ok) throw new Error('Failed to fetch from Google Sheets.');
       
-      const csvData = await response.text();
+      const arrayBuffer = await response.arrayBuffer();
       
-      // Parse the CSV string using XLSX
-      const workbook = read(csvData, { type: 'string' });
+      // Parse the XLSX ArrayBuffer using XLSX
+      const workbook = read(arrayBuffer, { type: 'array' });
       const schoolsList = parseWorkbook(workbook);
       
-      if (schoolsList.length > 0) {
+      if (schoolsList && schoolsList.length > 0) {
         alert('Successfully imported data from Google Link!');
         setSheetUrl('');
       }
