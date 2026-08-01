@@ -70,6 +70,7 @@ export const generateWordReport = async (
 
   const createHeaderCell = (title: string, color: string) => {
     return new TableCell({
+      width: { size: 50, type: WidthType.PERCENTAGE },
       shading: { fill: color },
       children: [
         new Paragraph({
@@ -115,6 +116,7 @@ export const generateWordReport = async (
     }));
 
     return new TableCell({
+      width: { size: 50, type: WidthType.PERCENTAGE },
       children: cellContents,
       borders: noBorders
     });
@@ -148,6 +150,7 @@ export const generateWordReport = async (
     }
 
     return new TableCell({
+      width: { size: 50, type: WidthType.PERCENTAGE },
       children: contents,
       borders: noBorders
     });
