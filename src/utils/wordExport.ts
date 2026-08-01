@@ -63,6 +63,15 @@ export const generateWordReport = async (
   // Chart rendering helper
   const shortName = school.School_Name.replace(/\s+/g, '_').toUpperCase();
 
+  const noBorders = {
+    top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+    bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+    left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+    right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+    insideHorizontal: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+    insideVertical: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+  };
+
   const createHeaderCell = (title: string, color: string) => {
     return new TableCell({
       shading: { fill: color },
@@ -73,12 +82,7 @@ export const generateWordReport = async (
           spacing: { before: 80, after: 80 }
         })
       ],
-      borders: {
-        top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        left: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        right: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-      }
+      borders: noBorders
     });
   };
 
@@ -125,12 +129,7 @@ export const generateWordReport = async (
 
     return new TableCell({
       children: cellContents,
-      borders: {
-        top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        left: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        right: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-      }
+      borders: noBorders
     });
   };
 
@@ -163,13 +162,7 @@ export const generateWordReport = async (
 
     return new TableCell({
       children: contents,
-      shading: { fill: "FFD966" },
-      borders: {
-        top: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        bottom: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        left: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-        right: { style: BorderStyle.SINGLE, size: 1, color: "CCCCCC" },
-      }
+      borders: noBorders
     });
   };
 
@@ -182,53 +175,74 @@ export const generateWordReport = async (
         }
       },
       children: [
-        ...(logoBuffer ? [
-          new Paragraph({
-            alignment: AlignmentType.RIGHT,
-            children: [
-              new ImageRun({
-                data: logoBuffer,
-                transformation: { width: 60, height: 60 },
-                type: 'png'
-              } as any)
-            ],
-            spacing: { after: 200 }
-          })
-        ] : []),
-        new Paragraph({
-          alignment: AlignmentType.CENTER,
-          children: [
-            new TextRun({
-              text: getSchoolTitle(),
-              bold: true,
-              italics: true,
-              size: 40, // 20pt
-            }),
-          ],
+        // Header Table for Title and Logo
+        new Table({
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          borders: noBorders,
+          rows: [
+            new TableRow({
+              children: [
+                new TableCell({
+                  width: { size: 85, type: WidthType.PERCENTAGE },
+                  borders: noBorders,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          text: getSchoolTitle(),
+                          bold: true,
+                          italics: true,
+                          size: 40, // 20pt
+                        }),
+                      ],
+                    }),
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          text: `${school.Mandal ? `${school.Mandal} Mandal, ` : ''}${school.District} District.`,
+                          bold: true,
+                          italics: true,
+                          size: 32, // 16pt
+                        }),
+                      ],
+                      spacing: { after: 400 },
+                    }),
+                    new Paragraph({
+                      alignment: AlignmentType.CENTER,
+                      children: [
+                        new TextRun({
+                          text: `${phase} Report`,
+                          bold: true,
+                          size: 28, // 14pt
+                        }),
+                      ],
+                      spacing: { after: 200 }
+                    }),
+                  ]
+                }),
+                new TableCell({
+                  width: { size: 15, type: WidthType.PERCENTAGE },
+                  borders: noBorders,
+                  children: [
+                    new Paragraph({
+                      alignment: AlignmentType.RIGHT,
+                      children: logoBuffer ? [
+                        new ImageRun({
+                          data: logoBuffer,
+                          transformation: { width: 80, height: 80 },
+                          type: 'png'
+                        } as any)
+                      ] : [],
+                    })
+                  ]
+                })
+              ]
+            })
+          ]
         }),
-        new Paragraph({
-          alignment: AlignmentType.CENTER,
-          children: [
-            new TextRun({
-              text: `${school.Mandal ? `${school.Mandal} Mandal, ` : ''}${school.District} District.`,
-              bold: true,
-              italics: true,
-              size: 32, // 16pt
-            }),
-          ],
-          spacing: { after: 400 },
-        }),
-        new Paragraph({
-          alignment: AlignmentType.CENTER,
-          children: [
-            new TextRun({
-              text: `${phase} Report`,
-              bold: true,
-              size: 28, // 14pt
-            }),
-          ],
-          spacing: { after: 200 }
-        }),
+        
         new Paragraph({
           alignment: AlignmentType.RIGHT,
           children: [
@@ -255,6 +269,7 @@ export const generateWordReport = async (
         // Table for Grades 3 and 4
         new Table({
           width: { size: 100, type: WidthType.PERCENTAGE },
+          borders: noBorders,
           rows: [
             new TableRow({
               children: [
@@ -277,6 +292,7 @@ export const generateWordReport = async (
         // Table for Grade 5 and Next Steps
         new Table({
           width: { size: 100, type: WidthType.PERCENTAGE },
+          borders: noBorders,
           rows: [
             new TableRow({
               children: [
