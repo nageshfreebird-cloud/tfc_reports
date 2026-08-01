@@ -185,7 +185,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
                   <LabelList 
                     dataKey="Baseline" 
                     position="insideTop" 
-                    fill="#000000" 
+                    fill="#FFFFFF" 
                     style={{ fontSize: '9px', fontWeight: 'bold' }}
                     formatter={(val: any) => Number(val).toFixed(1)}
                   />
@@ -196,7 +196,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
                   <LabelList 
                     dataKey="Midline" 
                     position="insideTop" 
-                    fill="#000000" 
+                    fill="#FFFFFF" 
                     style={{ fontSize: '9px', fontWeight: 'bold' }}
                     formatter={(val: any) => Number(val).toFixed(1)}
                   />
@@ -207,7 +207,7 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
                   <LabelList 
                     dataKey="Endline" 
                     position="insideTop" 
-                    fill="#000000" 
+                    fill="#FFFFFF" 
                     style={{ fontSize: '9px', fontWeight: 'bold' }}
                     formatter={(val: any) => Number(val).toFixed(1)}
                   />
