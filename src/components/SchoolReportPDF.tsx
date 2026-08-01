@@ -174,7 +174,6 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
         </text>
       );
     };
-
     return (
       <div className="flex flex-col items-center pt-1 pb-2">
         <h4 className="text-sm font-bold italic mb-2">{title}</h4>
@@ -192,17 +191,47 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
                 <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
-                  <LabelList dataKey="Baseline" content={renderCustomBarLabel} />
+                  <LabelList 
+                    dataKey="Baseline" 
+                    position="center" 
+                    fill="#FFFFFF" 
+                    stroke="#000000"
+                    strokeWidth={0.5}
+                    style={{ paintOrder: 'stroke' }}
+                    fontSize={10} 
+                    fontWeight="bold"
+                    formatter={(val: number) => Number(val).toFixed(2)} 
+                  />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
                 <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
-                  <LabelList dataKey="Midline" content={renderCustomBarLabel} />
+                  <LabelList 
+                    dataKey="Midline" 
+                    position="center" 
+                    fill="#FFFFFF" 
+                    stroke="#000000"
+                    strokeWidth={0.5}
+                    style={{ paintOrder: 'stroke' }}
+                    fontSize={10} 
+                    fontWeight="bold"
+                    formatter={(val: number) => Number(val).toFixed(2)} 
+                  />
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
                 <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
-                  <LabelList dataKey="Endline" content={renderCustomBarLabel} />
+                  <LabelList 
+                    dataKey="Endline" 
+                    position="center" 
+                    fill="#FFFFFF" 
+                    stroke="#000000"
+                    strokeWidth={0.5}
+                    style={{ paintOrder: 'stroke' }}
+                    fontSize={10} 
+                    fontWeight="bold"
+                    formatter={(val: number) => Number(val).toFixed(2)} 
+                  />
                 </Bar>
               )}
             </BarChart>
