@@ -181,10 +181,10 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
               <Legend verticalAlign="top" height={20} iconType="square" iconSize={8} wrapperStyle={{ fontSize: '9px', fontWeight: 'bold' }} />
               
               {stats.barData[0] && stats.barData[0].Baseline !== undefined && (
-                <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE">
+                <Bar dataKey="Baseline" fill="#4285F4" name="BASELINE" isAnimationActive={false}>
                   <LabelList 
                     dataKey="Baseline" 
-                    position="top" 
+                    position="insideTop" 
                     fill="#000000" 
                     style={{ fontSize: '9px', fontWeight: 'bold' }}
                     formatter={(val: any) => Number(val).toFixed(1)}
@@ -192,10 +192,10 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Midline !== undefined && (
-                <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE">
+                <Bar dataKey="Midline" fill="#EA4335" name="MIDLINE" isAnimationActive={false}>
                   <LabelList 
                     dataKey="Midline" 
-                    position="top" 
+                    position="insideTop" 
                     fill="#000000" 
                     style={{ fontSize: '9px', fontWeight: 'bold' }}
                     formatter={(val: any) => Number(val).toFixed(1)}
@@ -203,10 +203,10 @@ export default function SchoolReportPDF({ school, phase, config }: SchoolReportP
                 </Bar>
               )}
               {stats.barData[0] && stats.barData[0].Endline !== undefined && (
-                <Bar dataKey="Endline" fill="#34A853" name="ENDLINE">
+                <Bar dataKey="Endline" fill="#34A853" name="ENDLINE" isAnimationActive={false}>
                   <LabelList 
                     dataKey="Endline" 
-                    position="top" 
+                    position="insideTop" 
                     fill="#000000" 
                     style={{ fontSize: '9px', fontWeight: 'bold' }}
                     formatter={(val: any) => Number(val).toFixed(1)}
