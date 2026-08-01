@@ -19,10 +19,6 @@ export const generateWordReport = async (
   // Helpers
   const getSchoolTitle = () => {
     const fullSchoolName = expandSchoolName(school.School_Name);
-    
-    if (fullSchoolName && fullSchoolName.trim() !== '') {
-      return `${fullSchoolName}, ${school.Mandal !== 'N/A' ? school.Mandal + ',' : ''}`;
-    }
     return `${fullSchoolName}`;
   };
 
@@ -88,16 +84,7 @@ export const generateWordReport = async (
 
   const createChartCell = (grade: number, buffer: ArrayBuffer | null, figText: string) => {
     const cellContents = [];
-    const gradeString = grade === 3 ? "3rd" : grade === 4 ? "4th" : "5th";
-    const title = `${shortName}_${gradeString} Class ${phase} Test_Result`;
     
-    // Header
-    cellContents.push(new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: title, bold: true, italics: true, size: 20 })], // 10pt
-      spacing: { before: 100, after: 100 }
-    }));
-
     // Image
     if (buffer) {
       cellContents.push(new Paragraph({
@@ -106,8 +93,8 @@ export const generateWordReport = async (
           new ImageRun({
             data: buffer,
             transformation: {
-              width: 320,
-              height: 195,
+              width: 290,
+              height: 175,
             },
             type: 'png'
           } as any),
@@ -139,7 +126,7 @@ export const generateWordReport = async (
     if (phase === 'Baseline') {
       for (let i = 0; i < 4; i++) {
         contents.push(new Paragraph({
-          children: [new TextRun({ text: "• _______________________________________________________", size: 24 })],
+          children: [new TextRun({ text: "• __________________________________", size: 24 })],
           spacing: { before: 200, after: 200 }
         }));
       }
