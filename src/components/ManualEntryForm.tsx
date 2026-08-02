@@ -8,8 +8,8 @@ interface ManualEntryFormProps {
 }
 
 export default function ManualEntryForm({ config, onSubmit, onCancel }: ManualEntryFormProps) {
-  const [district, setDistrict] = useState('');
-  const [mandal, setMandal] = useState('');
+  const [district, setDistrict] = useState(() => localStorage.getItem('tfca-district') || '');
+  const [mandal, setMandal] = useState(() => localStorage.getItem('tfca-mandal') || '');
   const [schoolName, setSchoolName] = useState('');
   const [targetPhase, setTargetPhase] = useState<TestPhase>('Baseline');
 
@@ -136,11 +136,11 @@ export default function ManualEntryForm({ config, onSubmit, onCancel }: ManualEn
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1">District</label>
-            <input type="text" className="w-full border border-slate-300 rounded p-2 outline-none focus:border-indigo-500" value={district} onChange={e => setDistrict(e.target.value)} />
+            <input type="text" className="w-full border border-slate-300 rounded p-2 outline-none focus:border-indigo-500" value={district} onChange={e => { setDistrict(e.target.value); localStorage.setItem('tfca-district', e.target.value); }} />
           </div>
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1">Mandal</label>
-            <input type="text" className="w-full border border-slate-300 rounded p-2 outline-none focus:border-indigo-500" value={mandal} onChange={e => setMandal(e.target.value)} />
+            <input type="text" className="w-full border border-slate-300 rounded p-2 outline-none focus:border-indigo-500" value={mandal} onChange={e => { setMandal(e.target.value); localStorage.setItem('tfca-mandal', e.target.value); }} />
           </div>
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-1">School Name <span className="text-red-500">*</span></label>
