@@ -175,8 +175,6 @@ export default function App() {
     if (!url.trim()) return;
     setIsLoadingSheet(true);
     try {
-      // Extract the ID from standard google sheet links
-      // e.g. https://docs.google.com/spreadsheets/d/1wzd2oEq_0WR0psBFhVb_vQ9WiHL9XdnQJdTqMWY96o0/edit
       const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
       if (!match) {
         throw new Error('Invalid Google Sheets URL. Could not find Document ID.');
@@ -184,28 +182,43 @@ export default function App() {
       
       const docId = match[1];
       
-      // Try fetching "Reports" sheet first using Google Visualization API
-      const csvUrlReports = `https://docs.google.com/spreadsheets/d/${docId}/gviz/tq?tqx=out:csv&sheet=Reports`;
-      let proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrlReports)}`;
+      const fetchWithFallback = async (targetUrl: string) => {
+        // 1. Try direct fetch (gviz often supports CORS natively)
+        try {
+          const res = await fetch(targetUrl);
+          if (res.ok) return await res.text();
+        } catch (e) { /* ignore */ }
+        
+        // 2. Try corsproxy.io
+        try {
+          const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(targetUrl)}`);
+          if (res.ok) return await res.text();
+        } catch (e) { /* ignore */ }
+        
+        // 3. Try allorigins as last resort
+        const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`);
+        if (!res.ok) throw new Error("Network request failed");
+        return await res.text();
+      };
       
-      let response;
+      const csvUrlReports = `https://docs.google.com/spreadsheets/d/${docId}/gviz/tq?tqx=out:csv&sheet=Reports`;
       let csvData = '';
       
       try {
-        response = await fetch(proxyUrl);
-        csvData = await response.text();
+        csvData = await fetchWithFallback(csvUrlReports);
       } catch (e) {
-        // Ignore fetch errors here, we'll try the fallback
+        // completely failed
       }
       
-      // If it failed or returned HTML (usually meaning sheet not found or not public)
-      if (!response || !response.ok || csvData.includes('<html') || csvData.includes('<!DOCTYPE') || csvData.includes('"error"')) {
-        // Fallback to default CSV export (first sheet)
-        const csvUrlDefault = `https://docs.google.com/spreadsheets/d/${docId}/export?format=csv`;
-        proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrlDefault)}`;
-        response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error('Failed to fetch from Google Sheets.');
-        csvData = await response.text();
+      // If it failed or returned HTML (sheet not found or not public)
+      if (!csvData || csvData.includes('<html') || csvData.includes('<!DOCTYPE') || csvData.includes('"error"')) {
+        // Fallback to default sheet
+        const csvUrlDefault = `https://docs.google.com/spreadsheets/d/${docId}/gviz/tq?tqx=out:csv`;
+        try {
+          csvData = await fetchWithFallback(csvUrlDefault);
+        } catch (e) {
+          throw new Error('Failed to fetch from Google Sheets. Network might be blocking requests.');
+        }
         
         if (csvData.includes('<html') || csvData.includes('<!DOCTYPE')) {
           throw new Error('Google returned a web page instead of data. Make sure the sheet is set to "Anyone with the link can view".');
@@ -219,6 +232,8 @@ export default function App() {
       if (schoolsList && schoolsList.length > 0) {
         alert('Successfully imported data from Google Link!');
         setSheetUrl('');
+      } else {
+        alert('Could not find valid school data in the sheet.');
       }
     } catch (err: any) {
       console.error(err);
