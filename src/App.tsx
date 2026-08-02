@@ -355,9 +355,10 @@ export default function App() {
               </p>
             </div>
           </div>
-        </div>
+          </>
+        )}
 
-        {schools.length > 0 && (
+        {(schools.length > 0 || isManualMode) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Step 2: Configure Parameters */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
@@ -562,8 +563,6 @@ export default function App() {
               </div>
             </div>
           </div>
-        )}
-          </>
         )}
       </main>
     </div>
