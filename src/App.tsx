@@ -183,19 +183,37 @@ export default function App() {
       }
       
       const docId = match[1];
-      // Export as xlsx so we get all sheets, not just the first one
-      const xlsxUrl = `https://docs.google.com/spreadsheets/d/${docId}/export?format=xlsx`;
       
-      // We use allorigins as a reliable free CORS proxy to avoid browser blocks
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(xlsxUrl)}`;
+      // Try fetching "Reports" sheet first using Google Visualization API
+      const csvUrlReports = `https://docs.google.com/spreadsheets/d/${docId}/gviz/tq?tqx=out:csv&sheet=Reports`;
+      let proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrlReports)}`;
       
-      const response = await fetch(proxyUrl);
-      if (!response.ok) throw new Error('Failed to fetch from Google Sheets.');
+      let response;
+      let csvData = '';
       
-      const arrayBuffer = await response.arrayBuffer();
+      try {
+        response = await fetch(proxyUrl);
+        csvData = await response.text();
+      } catch (e) {
+        // Ignore fetch errors here, we'll try the fallback
+      }
       
-      // Parse the XLSX ArrayBuffer using XLSX
-      const workbook = read(arrayBuffer, { type: 'array' });
+      // If it failed or returned HTML (usually meaning sheet not found or not public)
+      if (!response || !response.ok || csvData.includes('<html') || csvData.includes('<!DOCTYPE') || csvData.includes('"error"')) {
+        // Fallback to default CSV export (first sheet)
+        const csvUrlDefault = `https://docs.google.com/spreadsheets/d/${docId}/export?format=csv`;
+        proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(csvUrlDefault)}`;
+        response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Failed to fetch from Google Sheets.');
+        csvData = await response.text();
+        
+        if (csvData.includes('<html') || csvData.includes('<!DOCTYPE')) {
+          throw new Error('Google returned a web page instead of data. Make sure the sheet is set to "Anyone with the link can view".');
+        }
+      }
+      
+      // Parse the CSV string using XLSX
+      const workbook = read(csvData, { type: 'string' });
       const schoolsList = parseWorkbook(workbook);
       
       if (schoolsList && schoolsList.length > 0) {
