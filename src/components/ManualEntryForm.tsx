@@ -86,6 +86,15 @@ export default function ManualEntryForm({ config, onSubmit, onCancel }: ManualEn
       }
     };
     onSubmit(schoolData, targetPhase);
+
+    setSchoolName('');
+    setGradesData({
+      3: { assessedCount: 0, baseline: emptyPhase(), midline: emptyPhase(), endline: emptyPhase() },
+      4: { assessedCount: 0, baseline: emptyPhase(), midline: emptyPhase(), endline: emptyPhase() },
+      5: { assessedCount: 0, baseline: emptyPhase(), midline: emptyPhase(), endline: emptyPhase() }
+    });
+
+    alert(`Report for ${schoolName} generated! You can now enter the next school.`);
   };
 
   const paramKeys: Array<keyof ReportConfig['parameters']> = ['KNOW', 'READ', 'SPELL', 'CWR', 'CWS'];

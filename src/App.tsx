@@ -302,7 +302,6 @@ export default function App() {
               setSchools([data]);
               setReportSchool(data.School_Name);
               setReportPhase(phase);
-              setIsManualMode(false);
             }} 
             onCancel={() => setIsManualMode(false)} 
           />
